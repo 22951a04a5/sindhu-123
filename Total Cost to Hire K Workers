@@ -1,0 +1,23 @@
+class Solution:
+    def totalCost(self, costs: List[int], k: int, candidates: int) -> int:
+        if candidates * 2 + k > len(costs):
+            return sum(sorted(costs)[:k])
+
+        lo, hi = candidates, max(candidates, len(costs) - candidates)
+        heap = list(zip(costs[:lo], count()))
+        heap += list(zip(costs[hi:], count(hi)))
+        heapify(heap)
+        result = 0
+        hi -= 1
+        for _ in range(k):
+            cost, idx = heappop(heap)
+            result += cost
+            if idx < lo:
+                heappush(heap, (costs[lo], lo))
+                lo += 1
+            else:
+                heappush(heap, (costs[hi], hi))
+                hi -= 1
+        return result
+
+        
